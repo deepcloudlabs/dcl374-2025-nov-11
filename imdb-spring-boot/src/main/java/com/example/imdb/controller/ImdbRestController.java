@@ -16,7 +16,7 @@ import com.example.imdb.service.WebConfig;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
-
+// set PATH=c:\DEVEL\stage\opt\curl-7.45.0\bin;%PATH%
 // curl "http://localhost:4400/imdb/api/v1/movies?fromYear=1970&toYear=1979"
 @RestController
 //@Scope("request")
