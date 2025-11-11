@@ -17,6 +17,7 @@ import com.example.imdb.service.WebConfig;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 
+// curl "http://localhost:4400/imdb/api/v1/movies?fromYear=1970&toYear=1979"
 @RestController
 //@Scope("request")
 @RequestScope
