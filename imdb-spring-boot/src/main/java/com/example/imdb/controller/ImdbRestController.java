@@ -16,6 +16,7 @@ import com.example.imdb.service.WebConfig;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
+
 // set PATH=c:\DEVEL\stage\opt\curl-7.45.0\bin;%PATH%
 // curl "http://localhost:4400/imdb/api/v1/movies?fromYear=1970&toYear=1979"
 @RestController
@@ -24,30 +25,27 @@ import jakarta.annotation.PreDestroy;
 @RequestMapping("/movies")
 @WebConfig
 public class ImdbRestController {
-	@Autowired
-	private MovieService movieService;
-	
-	public ImdbRestController() {
-		System.err.println("ImdbRestController()");
-		System.err.println(movieService);
+	private final MovieService movieService;
+
+	public ImdbRestController(MovieService movieService) {
+		this.movieService = movieService;
 	}
-	
+
 	@PostConstruct
 	public void baslangicIslemleri() {
 		System.err.println("baslangicIslemleri()");
 		System.err.println(movieService);
 	}
-	
+
 	@PreDestroy
 	public void sonlandirmaIslemleri() {
 		System.err.println("sonlandirmaIslemleri()");
 		System.err.println(movieService);
 	}
 
-	@GetMapping(params= {"fromYear","toYear"})
-	public Collection<Movie> getMoviesByYearRange(
-			@RequestParam(defaultValue = "1970") int fromYear,
-			@RequestParam(defaultValue = "1980") int toYear){
+	@GetMapping(params = { "fromYear", "toYear" })
+	public Collection<Movie> getMoviesByYearRange(@RequestParam(defaultValue = "1970") int fromYear,
+			@RequestParam(defaultValue = "1980") int toYear) {
 		return movieService.findAllMoviesByYearRange(fromYear, toYear);
 	}
 }
