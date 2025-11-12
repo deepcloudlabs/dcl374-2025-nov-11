@@ -3,10 +3,12 @@ package com.example.world.controller;
 import java.util.Collection;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,6 +17,7 @@ import org.springframework.web.context.annotation.RequestScope;
 
 import com.example.world.entity.Country;
 import com.example.world.repository.CountryRepository;
+import com.example.world.service.WorldService;
 
 /**
  * 
@@ -27,9 +30,11 @@ import com.example.world.repository.CountryRepository;
 @CrossOrigin
 public class CountryRestController {
 	private final CountryRepository countryRepository;
+	private final WorldService worldService;
 
-	public CountryRestController(CountryRepository countryRepository) {
+	public CountryRestController(CountryRepository countryRepository, WorldService worldService) {
 		this.countryRepository = countryRepository;
+		this.worldService = worldService;
 	}
 
 	// http://localhost:9001/world/api/countries/TUR
@@ -51,4 +56,14 @@ public class CountryRestController {
 		countryRepository.save(country);
 		return country;
 	}
+	@Transactional
+	@PutMapping(params= {"continent","increment"})
+	public String updateCountryPopulation(
+			@RequestParam String continent,
+			@RequestParam int increment) {
+		worldService.increasePopulation(increment, continent);
+		return "Success";
+	}
+	
+	
 }
