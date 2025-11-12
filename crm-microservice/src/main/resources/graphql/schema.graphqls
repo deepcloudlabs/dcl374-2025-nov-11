@@ -1,0 +1,37 @@
+type Query {
+	customerById(identity: ID): CustomerQLResponse
+}
+
+enum PhoneType {
+	HOME
+	BUSINESS
+	GSM
+}
+
+type Phone {
+	type: PhoneType!
+	countryCode: String!
+	number: String!
+	extension: String!
+}
+
+enum AddressType {
+	HOME
+	BUSINESS
+}
+
+type Address {
+	type: AddressType!
+	country: String!
+	city: String!
+	line: String!
+}
+
+type CustomerQLResponse {
+		identity: ID!
+		fullName: String!
+		email: String!
+		iban: String!
+		addresses: [Address]
+		phones: [Phone]
+}

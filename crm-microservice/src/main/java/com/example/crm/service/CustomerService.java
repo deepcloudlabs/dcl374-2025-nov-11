@@ -9,6 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.crm.document.CustomerDocument;
 import com.example.crm.dto.response.AcquireCustomerResponse;
+import com.example.crm.dto.response.Address;
+import com.example.crm.dto.response.CustomerQLResponse;
+import com.example.crm.dto.response.Phone;
 import com.example.crm.dto.response.UpdateCustomerResponse;
 import com.example.crm.repository.CustomerDocumentRepository;
 
@@ -69,6 +72,21 @@ public class CustomerService {
 						"No such customer with the identity no [%s] exists.".formatted(identityNo)));
 		customerDocumentRepository.delete(customerDocument);
 		return customerDocument;
+	}
+
+	public CustomerQLResponse getCustomerQLResponse(String identityNo) {
+		var customerDocument = customerDocumentRepository.findById(identityNo).orElseThrow(() -> new IllegalArgumentException(
+				"No such customer with the identity no [%s] exists.".formatted(identityNo)));
+		
+		var customerQLResponse = new CustomerQLResponse(
+				identityNo, 
+				customerDocument.getFullName(), 
+				customerDocument.getEmail(), 
+				customerDocument.getIban(), 
+				customerDocument.getAddresses().stream().map(addr -> new Address(addr.getType(), addr.getCountry(), addr.getCity(), addr.getLine())).toList(), 
+				customerDocument.getPhones().stream().map(phone -> new Phone(phone.getType(),phone.getCountryCode(),phone.getNumber(),phone.getExtension())).toList()
+		);
+		return customerQLResponse;
 	}
 
 }

@@ -4,7 +4,7 @@ public class Phone {
 	private PhoneType type;
 	private String countryCode;
 	private String number;
-	private String extention;
+	private String extension;
 
 	public PhoneType getType() {
 		return type;
@@ -30,12 +30,12 @@ public class Phone {
 		this.number = number;
 	}
 
-	public String getExtention() {
-		return extention;
+	public String getExtension() {
+		return extension;
 	}
 
-	public void setExtention(String extention) {
-		this.extention = extention;
+	public void setExtension(String extension) {
+		this.extension = extension;
 	}
 
 }
