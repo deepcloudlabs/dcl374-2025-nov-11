@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.crm.document.CustomerDocument;
 import com.example.crm.dto.response.AcquireCustomerResponse;
@@ -21,45 +22,52 @@ public class CustomerService {
 
 	public CustomerDocument findById(String identityNo) {
 		return customerDocumentRepository.findById(identityNo).orElseThrow(() -> new IllegalArgumentException(
-				"No such customer with the identity no(%s) exists.".formatted(identityNo)));
+				"No such customer with the identity no [%s] exists.".formatted(identityNo)));
 	}
 
 	public List<CustomerDocument> findAll(PageRequest page) {
 		return customerDocumentRepository.findAll(page).toList();
 	}
 
+	@Transactional
 	public AcquireCustomerResponse acquire(CustomerDocument customer) {
 		customerDocumentRepository.insert(customer);
 		return new AcquireCustomerResponse("success");
 	}
 
+	@Transactional
 	public UpdateCustomerResponse update(String identityNo, CustomerDocument customer) {
 		customerDocumentRepository.save(customer);
 		return new UpdateCustomerResponse("success");
 	}
 
+	@Transactional
 	public UpdateCustomerResponse patch(String identityNo, Map<String, Object> values) {
-	    var customerDocument = customerDocumentRepository.findById(identityNo).orElseThrow(() -> new IllegalArgumentException());
-	    for (var field: CustomerDocument.class.getDeclaredFields()) {
-	    	final var fieldName = field.getName();
+		var customerDocument = customerDocumentRepository.findById(identityNo)
+				.orElseThrow(() -> new IllegalArgumentException(
+						"No such customer with the identity no [%s] exists.".formatted(identityNo)));
+		for (var field : CustomerDocument.class.getDeclaredFields()) {
+			final var fieldName = field.getName();
 			if (values.containsKey(fieldName)) {
-	    		field.setAccessible(true);
-	    		try {
+				field.setAccessible(true);
+				try {
 					field.set(customerDocument, values.get(fieldName));
 				} catch (IllegalArgumentException | IllegalAccessException e) {
 					throw new IllegalArgumentException(e.getMessage());
 				}
-	    		field.setAccessible(false);
-	    	}
-	    }
-	    customerDocumentRepository.save(customerDocument);
+				field.setAccessible(false);
+			}
+		}
+		customerDocumentRepository.save(customerDocument);
 		return new UpdateCustomerResponse("success");
 	}
 
+	@Transactional
 	public CustomerDocument release(String identityNo) {
-		var customerDocument = customerDocumentRepository.findById(identityNo).orElseThrow(() -> new IllegalArgumentException(
-				"No such customer with the identity no(%s) exists.".formatted(identityNo)));
-		customerDocumentRepository.delete(customerDocument);	
+		var customerDocument = customerDocumentRepository.findById(identityNo)
+				.orElseThrow(() -> new IllegalArgumentException(
+						"No such customer with the identity no [%s] exists.".formatted(identityNo)));
+		customerDocumentRepository.delete(customerDocument);
 		return customerDocument;
 	}
 
