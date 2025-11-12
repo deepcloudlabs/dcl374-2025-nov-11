@@ -23,7 +23,7 @@ public class ProfileAspect implements Ordered{
 		return result;
 	}
 	
-	@Around("@target(profile) && execution(* com.example..*(..))")
+	@Around("@within(profile) && execution(* com.example..*(..))")
 	public Object profileAllClassMethods(ProceedingJoinPoint pjp,Profile profile) throws Throwable {
 		var start = System.nanoTime();
 		var result = pjp.proceed();
@@ -39,7 +39,6 @@ public class ProfileAspect implements Ordered{
 
 	@Override
 	public int getOrder() {
-		// TODO Auto-generated method stub
 		return -1;
 	}
 }

@@ -2,9 +2,11 @@ package com.example.service.business;
 
 import org.springframework.stereotype.Service;
 
+import com.example.aspect.Profile;
 import com.example.service.Calculator;
 
 @Service
+@Profile
 public class StandardCalculator implements Calculator {
 
 	@Override
