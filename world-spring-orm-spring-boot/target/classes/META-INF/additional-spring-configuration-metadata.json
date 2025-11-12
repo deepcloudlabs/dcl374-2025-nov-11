@@ -1,0 +1,5 @@
+{"properties": [{
+  "name": "lotteryMax",
+  "type": "java.lang.String",
+  "description": "A description for 'lotteryMax'"
+}]}
