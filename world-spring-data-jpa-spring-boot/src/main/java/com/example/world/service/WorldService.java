@@ -28,5 +28,6 @@ public class WorldService {
 		                 country.setPopulation(country.getPopulation()+increment);
 		                 country.setSurface(country.getSurface()+increment);
 		                 });
+		countryRepository.flush();
 	}
 }
