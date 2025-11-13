@@ -31,7 +31,7 @@ public class CrmWebSocketConsumerService implements WebSocketHandler {
 
 	@Override
 	public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
-		System.out.println(message.getPayload().toString());
+		System.err.println("New event has arrived from websocket: %s".formatted(message.getPayload()));
 
 	}
 
