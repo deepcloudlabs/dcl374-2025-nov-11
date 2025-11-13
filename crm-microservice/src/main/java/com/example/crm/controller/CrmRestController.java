@@ -3,6 +3,7 @@ package com.example.crm.controller;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.jaxb.SpringDataJaxb.OrderDto;
 import org.springframework.validation.annotation.Validated;
@@ -42,9 +43,12 @@ import jakarta.validation.constraints.Min;
 public class CrmRestController {
 
 	private final CustomerService customerService;
-
-	public CrmRestController(CustomerService customerService) {
+	private final int port;
+	public CrmRestController(
+			CustomerService customerService, 
+			@Value("${server.port}") int port) {
 		this.customerService = customerService;
+		this.port = port;
 	}
 
 	// Query
@@ -57,6 +61,7 @@ public class CrmRestController {
 			@Parameter(description = "Identity No", example = "11111111110")
 			@PathVariable 
 			@TcKimlikNo String identityNo) {
+		System.err.println("New request has arrived at port [%d]".formatted(port));
 		return customerService.findById(identityNo);
 	}
 

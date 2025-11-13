@@ -1,0 +1,22 @@
+{
+	"identityNo": "11111111110",
+	"fullName": "jack bauer",
+	"email": "jack.bauer@example.com",
+	"addresses": [
+		{
+			"type": "HOME",
+			"country": "turkey",
+			"city": "ankara",
+			"line": "kuyu street"
+		}
+	],
+	"phones": [
+		{
+			"type": "HOME",
+			"countryCode": "+90",
+			"number": "3125555555",
+			"extension": null
+		}
+	],
+	"iban": "DE70500202009142511474"
+}
