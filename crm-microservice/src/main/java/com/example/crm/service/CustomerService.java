@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,20 +16,21 @@ import com.example.crm.dto.response.CustomerQLResponse;
 import com.example.crm.dto.response.Phone;
 import com.example.crm.dto.response.UpdateCustomerResponse;
 import com.example.crm.repository.CustomerDocumentRepository;
+import com.example.crm.service.business.event.CustomerAcquiredEvent;
+import com.example.crm.service.business.event.CustomerReleasedEvent;
+import com.example.crm.service.business.event.CustomerUpdatedEvent;
 
 @Service
 public class CustomerService {
 	private final CustomerDocumentRepository customerDocumentRepository;
-
-	public CustomerService(CustomerDocumentRepository customerDocumentRepository) {
+	private final ApplicationEventPublisher applicationEventPublisher;
+	
+	public CustomerService(CustomerDocumentRepository customerDocumentRepository, ApplicationEventPublisher applicationEventPublisher) {
 		this.customerDocumentRepository = customerDocumentRepository;
+		this.applicationEventPublisher = applicationEventPublisher;
 	}
 
 	public CustomerDocument findById(String identityNo) {
-		try {
-			TimeUnit.SECONDS.sleep(5);
-		} catch (InterruptedException e) {
-		}
 		return customerDocumentRepository.findById(identityNo).orElseThrow(() -> new IllegalArgumentException(
 				"No such customer with the identity no [%s] exists.".formatted(identityNo)));
 	}
@@ -40,12 +42,16 @@ public class CustomerService {
 	@Transactional
 	public AcquireCustomerResponse acquire(CustomerDocument customer) {
 		customerDocumentRepository.insert(customer);
+		var event = new CustomerAcquiredEvent(customer.getIdentityNo());
+		applicationEventPublisher.publishEvent(event);
 		return new AcquireCustomerResponse("success");
 	}
 
 	@Transactional
 	public UpdateCustomerResponse update(String identityNo, CustomerDocument customer) {
 		customerDocumentRepository.save(customer);
+		var event = new CustomerUpdatedEvent(customer.getIdentityNo());
+		applicationEventPublisher.publishEvent(event);
 		return new UpdateCustomerResponse("success");
 	}
 
@@ -67,6 +73,8 @@ public class CustomerService {
 			}
 		}
 		customerDocumentRepository.save(customerDocument);
+		var event = new CustomerUpdatedEvent(identityNo);
+		applicationEventPublisher.publishEvent(event);
 		return new UpdateCustomerResponse("success");
 	}
 
@@ -76,6 +84,8 @@ public class CustomerService {
 				.orElseThrow(() -> new IllegalArgumentException(
 						"No such customer with the identity no [%s] exists.".formatted(identityNo)));
 		customerDocumentRepository.delete(customerDocument);
+		var event = new CustomerReleasedEvent(identityNo);
+		applicationEventPublisher.publishEvent(event);
 		return customerDocument;
 	}
 
