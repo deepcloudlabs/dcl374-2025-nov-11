@@ -17,7 +17,6 @@ public class CustomerController {
 
 	@QueryMapping
 	public CustomerQLResponse customerById(@Argument String identity) {
-		System.out.println();
 		return customerService.getCustomerQLResponse(identity);
 	}
 }

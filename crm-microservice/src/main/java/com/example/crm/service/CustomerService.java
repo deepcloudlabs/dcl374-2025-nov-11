@@ -2,6 +2,7 @@ package com.example.crm.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,10 @@ public class CustomerService {
 	}
 
 	public CustomerDocument findById(String identityNo) {
+		try {
+			TimeUnit.SECONDS.sleep(5);
+		} catch (InterruptedException e) {
+		}
 		return customerDocumentRepository.findById(identityNo).orElseThrow(() -> new IllegalArgumentException(
 				"No such customer with the identity no [%s] exists.".formatted(identityNo)));
 	}
